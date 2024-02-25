@@ -1,0 +1,125 @@
+{% extends "admin_custom/base.html" %}
+{% block content %}
+<head>
+   <style>
+     body {
+    font-family: "poppins", sans-serif;
+    font-weight: initial;
+    line-height: normal;
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    margin-top: 0px;
+    flex-wrap: wrap;
+  }
+   </style>
+</head>
+                    <div class="row">
+                        <div class="col-md-12 stretch-card grid-margin">
+                            <div class="card">
+
+			       <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+			       <button type="button"
+				      class="upload-label btn btn-light btn-sm" onclick="triggerFileInput()">
+                                            <i class="fas fa-plus" style="padding-right:1px;">
+					       </i> Add Bulk Entry
+                                        </button>
+                                        <input type="file" id="bulk-file-input" class="upload-btn" style="display: none;" onchange="handleFileUpload()">
+                                        
+                                        <button type="button"
+						  id="upload-btn"
+					       class="upload-label btn btn-success btn-sm" style="display: none;" onclick="submitForm()">
+                                            Upload
+                                        </button>
+
+
+                                        <button type="button"
+					       class="upload-label btn btn-light btn-sm" onclick="window.location.href='{% url 'add_inventory' %}'">
+                                            <i class="fas fa-plus" style="padding-right:5px;"></i>Add single entry
+                                        </button>                                        
+
+                                    </div>
+                                    </div>
+
+                                    <form id="file-upload-form" method="post" enctype="multipart/form-data" action="{% url 'csv_upload_view' %}" style="display: none;">
+                                        {% csrf_token %}
+                                        <input type="file" name="csv_upload" id="hidden-file-input">
+                                    </form>
+
+                                </div>
+    
+        <div class="col-md-12 stretch-card grid-margin">
+            <div class="card" style="margin-top:1%;">
+                    <div class="table-responsive">
+                                    <table class="display" width="100%" id="table_data_production">
+                                        <thead>
+                                            <tr>
+                                                <th width="20%">Article</th>
+                                                <th>Title</th>
+                                                <th>Authors</th>
+                                                <th>File status</th>
+                                                <th>Edit</th>
+                                                <th>Delete</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for article in data %}
+                                            <tr>
+                                                <td>{{article.article_id}}</td>
+                                                <td>{{article.title}}</td>
+                                                <td>{{article.authors}}</td>
+                                                <td>{% if article.filestatus == 'a' %}{{'Open'}} {% elif article.filestatus == 'i' %} {{'Process'}} {% endif %}</td>
+      <td align="center"><a class="text-success" href="{% url 'edit_inventory' id=article.id %}"><svg xmlns="http://www.w3.org/2000/svg"
+      width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+</svg></a></td>
+      <td align="center"><a class="text-danger" href="{% url 'delete_inventory' id=article.id %}"><svg xmlns="http://www.w3.org/2000/svg"
+      width="20" height="20" fill="currentColor" class="bi bi-x-octagon-fill" viewBox="0 0 16 16">
+  <path d="M11.46.146A.5.5 0 0 0 11.107 0H4.893a.5.5 0 0 0-.353.146L.146 4.54A.5.5 0 0 0 0 4.893v6.214a.5.5 0 0 0 .146.353l4.394 4.394a.5.5 0 0 0 .353.146h6.214a.5.5 0 0 0 .353-.146l4.394-4.394a.5.5 0 0 0 .146-.353V4.893a.5.5 0 0 0-.146-.353zm-6.106 4.5L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708"/>
+</svg></a></td>
+						
+					    </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                            </div>
+                        </div>
+                    </div>
+		    </div>
+		    
+
+    <script>
+function triggerFileInput() {
+    // Trigger the file input
+    document.getElementById('bulk-file-input').click();
+}
+
+function handleFileUpload() {
+    // Show the upload button when a file is selected
+    document.getElementById('upload-btn').style.display = 'block';
+}
+
+function submitForm() {
+    // Copy the file to the hidden form and submit it
+    var fileInput = document.getElementById('bulk-file-input');
+    var hiddenInput = document.getElementById('hidden-file-input');
+    hiddenInput.files = fileInput.files;
+    document.getElementById('file-upload-form').submit();
+}
+
+    </script>
+<script>
+    var $j = jQuery.noConflict();
+</script>
+  
+  <!-- Use $j instead of $ for DataTable initialization -->
+  <script>
+    $j(document).ready(function() {
+      $j('#table_data_production').DataTable({
+        "paging": true,
+        "ordering": true,
+        "searching": true
+      });
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% load static %}
+
+{% if request.user.is_authenticated %}
+
+
+    <nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav" style="margin:15px 0px!important;">
+
+
+        {% if request.user.is_superuser %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'dashboard' %}" style="border-radius:0px!important;">
+                <i class="fas fa-home menu-icon"></i>
+                <span class="menu-title" style="margin-left:-3%;">Home</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'production' %}" style="border-radius:0px!important;">
+                <i class="fas fa-bookmark menu-icon"></i>
+                <span class="menu-title">Inventories</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'search_article' %}" style="border-radius:0px!important;">
+                <i class="fas fa-search menu-icon"></i>
+                <span class="menu-title" style="margin-left:-2%;">Article Tracking</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'selectdaterange' %}" style="border-radius:0px!important;">
+                <i class="fas fa-file-alt menu-icon"></i>
+                <span class="menu-title">Report</span>
+            </a>
+        </li>
+        {% endif %}
+
+        {% for group_for in request.user.groups.all %}
+
+        {% if group_for.name == 'l2_edit' %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'l2_process' %}" style="border-radius:0px!important;">
+                <i class="fas fa-home menu-icon"></i>
+                <span class="menu-title" style="margin-left:-3%;">Home</span>
+            </a>
+        </li>
+        {% elif group_for.name == 'Typesetting' %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'dashboard' %}" style="border-radius:0px!important;">
+                <i class="fas fa-home menu-icon"></i>
+                <span class="menu-title" style="margin-left:-3%;">Home</span>
+            </a>
+        </li>
+        {% elif group_for.name == 'Digitalization' %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'dashboard' %}" style="border-radius:0px!important;">
+                <i class="fas fa-home menu-icon"></i>
+                <span class="menu-title" style="margin-left:-3%;">Home</span>
+            </a>
+        </li>
+        {% elif group_for.name == 'author_review' %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'dashboard' %}" style="border-radius:0px!important;">
+                <i class="fas fa-home menu-icon"></i>
+                <span class="menu-title" style="margin-left:-3%;">Home</span>
+            </a>
+        </li>
+        {% elif group_for.name == 'author_correction' %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'dashboard' %}" style="border-radius:0px!important;">
+                <i class="fas fa-home menu-icon"></i>
+                <span class="menu-title" style="margin-left:-3%;">Home</span>
+            </a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+    </ul>
+</nav>
+{% endif %}

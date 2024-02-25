@@ -1,0 +1,241 @@
+{% extends "admin_custom/base.html" %}
+{% load static %}
+{% block content %}
+<head>
+<style>
+  body {
+    font-family: "poppins", sans-serif;
+    font-weight: initial;
+    line-height: normal;
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    margin-top: 0px;
+    flex-wrap: wrap;
+  }
+
+.expanded {
+  max-height: 40px; /* Adjust the maximum height as needed */
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+  
+  .card1 {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: springgreen;
+    background-clip: border-box;
+    border: 1px solid #e3e3e3;
+    border-radius: 20px;
+    margin: 0px 15px;
+    justify-content: space-between;    
+  }
+
+  .badge {
+    background-color: #007bff;
+    color: #fff;
+    padding: 8px 12px;
+    margin: 0 5px;
+    border-radius: 5px;
+  }
+
+  .title {
+    background-color: black;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+
+  .title h6 {
+    color: white;
+    padding: 13px;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+  }
+
+
+
+  .copyediting-scroll {
+    height: 530px;
+
+    overflow-y: scroll;
+  }
+
+
+  .copyediting-scroll::-webkit-scrollbar {
+    width: 0;
+  }
+
+  .custommb-3
+  {
+	  margin-bottom: -1rem !important;
+  }
+</style>
+</head>
+
+{% if request.user.is_superuser %}
+
+    <div class="row">
+      <div class="col-md-4 stretch-card grid-margin">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title text-center">Copyediting ( {{combined_count}} )</h5>
+            <div class="column copyediting-scroll">
+              {% for article in combined_data %}
+              <div class="row custommb-3">
+                <i class="fas fa-plus"></i><div class="card1 expanded" onclick="toggleCard(this)">
+                  <div class="title">
+                    <h6>
+                      {% if article.type == 'Inventory_Upload' %}
+                      {{article.data.article_id}}
+                      {% elif article.type == 'L2_Edit' %}
+                      {{article.related_data.article_id}}
+                      {% endif %}
+                      <span>
+			 <i class="fas fa-plus"></i>
+                      </span>
+                    </h6>
+                  </div>
+                  <div class="custemcardbody">
+                  {% if article.type == 'Inventory_Upload' %}
+                  <p style="padding:5px 8px;">{{ article.data.title }}</p>
+                  {% elif article.type == 'L2_Edit' %}
+                  <p style="padding:5px 8px;">{{ article.related_data.title }}</p>
+                  {% endif %}
+                  {% if article.type == 'Inventory_Upload' %}
+                  <p style="color:#248AFD;padding:1px 8px;font-size:12px;font-family:poppins,semi-bold;">{{article.data.authors}}</p>
+                  {% elif article.type == 'L2_Edit' %}
+                  <p style="color:#248AFD;padding:1px 8px;font-size:12px;font-family:poppins,semi-bold;">{{article.related_data.authors}}</p>
+                  {% endif %}
+                  <div class="row" style="padding:15px;">
+                    <div class="badge" style="background-color:#58d8a3;padding:5px 4px;"><i
+                        class="fas fa-calendar"></i>
+                      {% if article.type == 'Inventory_Upload' %}
+                      {{article.data.received_date|date:"F Y"}}
+                      {% elif article.type == 'L2_Edit' %}
+                      {{article.related_data.received_date|date:"F Y"}}
+                      {% endif %}
+
+                    </div>
+                    {% if article.type == 'Inventory_Upload' %}
+                    <div class="badge" style="background-color:#4B49AC;padding:5px 4px;"><i
+                        class="fas fa-user-circle"></i>
+                      {{article.data.user_name}}
+                    </div>
+                    {% elif article.type == 'L2_Edit' %}
+                    <div class="badge" style="background-color:#4B49AC;padding:5px 4px;"><i
+                      class="fas fa-user-circle"></i>
+                    {{article.data.user_name}}
+                  </div>
+                  {% endif %}
+                    <div class="badge" style="background-color:#57c7d4;padding:5px 4px;"><i
+                        class="fas fa-clock"></i>
+                      2d
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </div>
+          {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-md-4 stretch-card grid-margin">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title text-center">Typesetting ({{ typeset_count }})</h5>
+            <div class="column copyediting-scroll">
+              {% for article in typeset_data %}
+              <div class="row custommb-3">
+                <i class="fas fa-plus"></i><div class="card1 expanded"
+		onclick="toggleCard(this)">
+                  <div class="title">
+                    <h6>
+                      {{article.article_id}}
+                      <span>
+			 <i class="fas fa-plus"></i>
+                      </span>
+                    </h6>
+                  </div>
+                  <div class="custemcardbody">
+                  <p style="padding:5px 8px; ">{{article.article_id.title}}</p>
+                  <p style="color:#248AFD;padding:1px 8px;font-size:12px;font-family:poppins,semi-bold;">{{article.article_id.authors}}</p>
+
+                  <div class="row" style="padding:15px;">
+                    <div class="badge" style="background-color:#58d8a3;padding:5px 4px;"><i
+                        class="fas fa-calendar"></i>
+                        {{article.article_id.received_date|date:"F Y"}}
+                    </div>
+                    <div class="badge" style="background-color:#4B49AC;padding:5px 4px;"><i
+                        class="fas fa-user-circle"></i>
+                        {{article.user_name}}
+                    </div>
+                    <div class="badge" style="background-color:#57c7d4;padding:5px 4px;"><i
+                        class="fas fa-clock"></i>
+                      2d
+                    </div>
+                  </div>
+                </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 stretch-card grid-margin">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title text-center">Digitalization ({{digitalization_count}})</h5>
+            <div class="column   copyediting-scroll">
+              {% for article in digitalization_data %}
+              <div class="row custommb-3">
+                <i class="fas fa-plus"></i><div class="card1 expanded"
+		onclick="toggleCard(this)">
+                  <div class="title">
+                    <h6>
+                      {{article.article_id}}
+                      <span>
+			 <i class="fas fa-plus"></i>
+                      </span>
+                    </h6>
+                  </div>
+		  <div class="custemcardbody">
+                  <p style="padding:5px 8px; ">{{article.article_id.title}}</p>
+                  <p style="color:#248AFD;padding:1px 8px;font-size:12px;font-family:poppins,semi-bold;">{{article.article_id.authors}}</p>
+
+                  <div class="row" style="padding:15px;">
+                    <div class="badge" style="background-color:#58d8a3;padding:5px 4px;"><i
+                        class="fas fa-calendar"></i>
+                        {{article.article_id.received_date|date:"F Y"}}
+                    </div>
+                    <div class="badge" style="background-color:#4B49AC;padding:5px 4px;"><i
+                        class="fas fa-user-circle"></i>
+                        {{article.user_name}}
+                    </div>
+                    <div class="badge" style="background-color:#57c7d4;padding:5px 4px;"><i
+                        class="fas fa-clock"></i>
+                      2d
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <!-- partial -->
+
+{% endif%}
+{% endblock %}
+

@@ -1,0 +1,45 @@
+{% extends "admin_custom/base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+.custom-width-input
+{
+        width: 950px; /* Adjust the width value as per your requirements */
+}
+</style>
+<div class="row">
+            <div class="col-md-12 stretch-card grid-margin">
+                <div class="card">
+                            <div class="search-col custom-width">
+                                <form class="d-flex" method="POST" action="{%url 'search_article' %}">
+                                    {%csrf_token%}
+                                       <input class="form-control me-6 custom-width-input" type="Search"
+                                        placeholder="Search Article status here"
+                                           arial-label="Search" name="searched">
+                                     <button class="btn-sm btn-outline-success" type="submit">Search</button>
+                                    </form>
+                            </div>
+                </div>
+            </div> 
+        </div>
+
+<script>
+    $(document).ready(function(){
+        $("#search-form").submit(function(event){
+            event.preventDefault(); // Prevent the default form submission
+            var searchData = $(this).serialize(); // Serialize the form data
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'search_article' %}", // Replace with your URL mapped to search_article view
+                data: searchData,
+                success: function(response){
+                    $("#search-results").html(response); // Update the search results section with the response
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}">
+<head>
+
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>AUREA</title>
+  
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/util.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+  <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
+  <link rel="stylesheet" href="{% static 'css/vertical-layout-light/style.css' %}">
+  <link rel="shortcut icon" href="{% static 'images/Aurea_logo.png' %}" >
+
+  <script src="{% static 'js/min.js' %}"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/dataTables.css' %}">
+  <script type="text/javascript" charset="utf8" src="{% static 'js/dataTables.js' %}"></script>
+  <link href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" rel="stylesheet">
+
+</head>
+
+
+<body>
+   {% if user.is_authenticated %}
+
+  <div class="container-scroller">
+      {% include "admin_custom/navigation.html" %}
+          <div class="content-wrapper">
+        {% block content %}
+        {% endblock %}
+      </div>
+  </div>
+
+{% endif %}
+
+{% block extrascript %}
+<script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+<script src="{% static 'js/template.js' %}"></script>
+<script src="{% static 'vendors/toggleCard.js' %}"></script>
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,33 @@
+{% extends "admin_custom/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+   <style>
+     body {
+    font-family: "poppins", sans-serif;
+    font-weight: initial;
+    line-height: normal;
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    margin-top: 0px;
+    flex-wrap: wrap;
+  }
+     .custom-card
+     {
+	     width: 980px;
+	}
+   </style>
+<div class="custom-card">
+<div class="card text-center">
+   <p>Are you sure you want to delete "{{inventory_instance.article_id }}"?</p>
+   <form method="post">
+    {% csrf_token %}
+    <button class="btn btn-danger" type="submit">Delete</button>
+    <a class="btn btn-success" href="{% url 'production' %}">Cancel</a>
+  </form>
+</div>
+</div>
+{% endblock %}
+
+
+

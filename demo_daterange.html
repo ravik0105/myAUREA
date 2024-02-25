@@ -1,0 +1,124 @@
+{% extends "admin_custom/base.html" %}
+{% load static %}
+
+{% block content %}
+<head>
+   <style>
+     body {
+    font-family: "poppins", sans-serif;
+    font-weight: initial;
+    line-height: normal;
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    margin-top: 0px;
+    flex-wrap: wrap;
+  }
+   </style>
+</head>
+<div class="row">
+            <div class="col-md-12 stretch-card grid-margin">
+
+                <div class="card">
+                        <form method="GET" action="{% url 'selectdaterange' %}" >
+                            <table class="table">
+                                <tr>
+
+                                    <td><input type="text"
+				    class="form-control me-6 custom-width-input"
+				    id="article_id" name="article_id"
+				    placeholder="Article Id/Journal Name"></td>
+
+                                    <td>
+                                        <select class="form-control" id="activity_filter" name="activity_filter">
+                                            <option value="">-- Select Activity --</option>
+                                            {% for choice in activity_choices %}
+                                                <option value="{{ choice.0 }}" {% if choice.0 == request.GET.activity_filter %}selected{% endif %}>{{ choice.1 }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+
+                                    <td>
+                                        <select class="form-control" id="filestatus_filter" name="filestatus_filter">
+                                            <option value="">-- File Status --</option>
+                                            {% for choice in filestatus_choices %}
+                                                <option value="{{ choice.0 }}" {% if choice.0 == request.GET.filestatus_filter %}selected{% endif %}>{{ choice.1 }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+
+                                    <td><input type="date" class="form-control" id="start_date" name="start_date"></td>
+
+
+                                    <td><input type="date" class="form-control" id="end_date" name="end_date"></td>
+				</tr>
+				<tr>
+				<td colspan="5" align="center">
+				       <button 
+						type="submit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Filter</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button></td>
+
+				</tr>
+                            </table>
+                    </div>
+                    </form>
+</div>
+        <div class="col-md-12 stretch-card grid-margin">
+            <div class="card" style="margin-top:1%;">
+                    <div class="table-responsive">
+                        <table class="display" width="100%" id="table_daterange">
+                            <thead>
+                                <tr class="text-white" style="background-color: black">
+                                    <th>Article Id</th>
+                                    <th>User Name</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Status</th>
+                                    <th>Activity</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {%for art in data%}
+                                <tr>
+                                    <td align="left">{{art.article_id}} </td>
+                                    <td>{{art.user_name}}</td>
+                                    <td>{{art.start_date|date:"d-m-y"}} </td>
+                                    <td>{{art.end_date|date:"d-m-y"}}</td>
+                                    <td>{%if art.filestatus == 'c'%}Closed{% elif art.filestatus == 'i'%}In process{%elif art.filestatus == 'a'%}Open{%elif art.filestatus == 'q'%}Query{%elif art.filestatus == 'rc'%}Query Received{%elif art.filestatus == 'ra'%}Query Raised{%elif art.filestatus == 'r'%}Rejected{%endif%}</td>
+                                    <td>{%if art.activity == 'L1ED'%}L1 Edit
+                                        {% elif art.activity == 'L2ED'%}Copy editting
+					{% elif art.activity == 'AURW'%}Author review
+					{% elif art.activity == 'AUCR'%}Author corrections
+					{% elif art.activity == 'DIGT'%}DigitaliZation
+                                        {% elif art.activity == 'ARTW'%}Artwork
+                                        {% elif art.activity == 'TYPE'%}Type setting
+                                        {%endif%}</td>
+
+
+
+                                </tr>
+                                {%endfor%}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a style="align: right" class="btn-success btn-sm" href="{% url 'importcsv' %}?article_id={{ request.GET.article_id|default:'' }}&start_date={{ request.GET.start_date|default:'' }}&end_date={{ request.GET.end_date|default:'' }}&filestatus_filter={{ request.GET.filestatus_filter|default:'' }}&activity_filter={{ request.GET.activity_filter|default:'' }}">Export CSV</a>
+            <input type="file" id="production-file" class="upload-btn" style="display: none;"
+                onchange="handleFileUpload(this)">
+</div>
+<script>
+    var $j = jQuery.noConflict();
+</script>
+  <script>
+    $j(document).ready(function() {
+      $j('#table_daterange').DataTable({
+        "paging": true,
+        "ordering": true,
+        "searching": true
+      });
+    });
+  </script>
+
+{% endblock %}
